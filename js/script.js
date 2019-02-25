@@ -1,50 +1,51 @@
 'use strict';
 
 var newGame = document.getElementById('new-game');
-var stone = document.getElementById('stone');
-var paper = document.getElementById('paper');
-var scissors = document.getElementById('scissors');
 var output = document.getElementById('output');
 var results = document.getElementById('results');
-var roundsAmount = document.getElementById('rounds');
+var rounds = document.getElementById('rounds');
 
-var scorePlayer = 0;
-var pointsPlayer = scorePlayer;
-var scoreComp = 0;
-var pointsComp = scoreComp;
-var round;
+
+//---------------------ETAP 3 ZADANIA
+var params = {
+  scorePlayer: '',
+  scoreComputer: '',
+  roundsToWin: '',
+  roundsPlayed: '',
+  endGame: ''
+}
 
 var startNewGame = function(){ //rozpoczynanie nowej gry
-  pointsComp = 0; //zerowanie punktow komputera
-  pointsPlayer = 0; //zerowanie punktow gracza
+  params.scoreComputer = 0; //zerowanie punktow komputera
+  params.scorePlayer = 0; //zerowanie punktow gracza
   results.innerHTML = ""; //czyszczenie results
   output.innerHTML = ""; //czyszczenie output
-  round = window.prompt('HOW MANY ROUNDS TO WIN?');
+  params.roundsToWin = window.prompt('HOW MANY ROUNDS TO WIN?');
   
-  if (isNaN(round) || round == null || round == ' ' || round == '') {
-    return roundsAmount.innerHTML = 'PLEASE ENTER A NUMBER OF ROUNDS!';
+  if (isNaN(params.roundsToWin) || params.roundsToWin == null || params.roundsToWin == ' ' || params.roundsToWin == '') {
+    return rounds.innerHTML = 'PLEASE ENTER A NUMBER OF ROUNDS!';
   } else {
-    roundsAmount.innerHTML = 'ROUNDS: ' + round;
+    rounds.innerHTML = 'ROUNDS: ' + params.roundsToWin;
   }
-  return round; //zwracanie ilosci rund od ktorych bedzie zalezec dalsza gra
+  return params.roundsToWin; //zwracanie ilosci rund od ktorych bedzie zalezec dalsza gra
 }
 
 var counter = function(num) { //dodawanie punktow
   
-  if (num == 1 && pointsPlayer < round && pointsComp < round) { //gracz wygral punkt
-    pointsPlayer += 1;
-  } else if (num == 0 && pointsComp < round && pointsPlayer < round) { //gracz przegral punkt
-    pointsComp += 1;
+  if (num == 1 && params.scorePlayer < params.roundsToWin && params.scoreComputer < params.roundsToWin) { //gracz wygral punkt
+    params.scorePlayer += 1;
+  } else if (num == 0 && params.scoreComputer < params.roundsToWin && params.scorePlayer < params.roundsToWin) { //gracz przegral punkt
+    params.scoreComputer += 1;
   } else {
-    results.innerHTML = pointsPlayer + ' - ' + pointsComp; //remis
+    results.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer; //remis
   }
   
-  results.innerHTML = pointsPlayer + ' - ' + pointsComp;
+  results.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer;
   
-  if (pointsPlayer >= round) {
-    results.innerHTML = pointsPlayer + ' - ' + pointsComp + '<br>YOU WON!';
-  } else if (pointsComp >= round){
-    results.innerHTML = pointsPlayer + ' - ' + pointsComp + '<br>YOU LOST!';
+  if (params.scorePlayer >= params.roundsToWin) {
+    results.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br>YOU WON!';
+  } else if (params.scoreComputer >= params.roundsToWin){
+    results.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br>YOU LOST!';
   }
 }
 
@@ -84,17 +85,35 @@ var playerMove = function(num) { //ruch gracza
     counter(2);
   };
   
-  if (round == undefined) { //wymaganie od gracza ilosci rund
+  if (params.roundsToWin == undefined) { //wymaganie od gracza ilosci rund
     output.innerHTML = 'YOU NEED A NUMBER THERE!';
     results.innerHTML = '';
   }
   
-  if (pointsPlayer >= round || pointsComp >= round) {
+  if (params.scorePlayer >= params.roundsToWin || params.scoreComputer >= params.roundsToWin) {
     output.innerHTML = "GAME IS OVER! PLEASE PRESS NEW GAME BUTTON";
   }
 };
 
 newGame.addEventListener('click', startNewGame);
-stone.addEventListener('click', function(){playerMove(1)});
-paper.addEventListener('click', function(){playerMove(2)});
-scissors.addEventListener('click', function(){playerMove(3)});
+
+//---------------------------------ETAP 2 ZADANIA
+
+document.querySelectorAll('.player-move').forEach(function(btn){
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    var x = btn.dataset.move; //pobieranie nazwy ruchu gracza
+
+    var y; //zmienna potrzebna by przypisac ruch gracza do numeru
+
+    if (x == 'paper') {
+      y = 1;
+    } else if (x == 'stone') {
+      y = 2;
+    } else {
+      y = 3;
+    }
+
+    playerMove(y);
+  });
+});
