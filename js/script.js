@@ -4,9 +4,10 @@ var newGame = document.getElementById('new-game');
 var output = document.getElementById('output');
 var results = document.getElementById('results');
 var rounds = document.getElementById('rounds');
+var score = document.getElementById('score');
 
 
-//---------------------ETAP 3 ZADANIA
+//---------------------ETAP 3 ZADANIA - przypisanie parametrów do obiektu
 var params = {
   scorePlayer: '',
   scoreComputer: '',
@@ -14,6 +15,56 @@ var params = {
   roundsPlayed: '',
   endGame: ''
 }
+
+//---------------------------------ETAP 4 ZADANIA - modal
+
+
+function openModal() {
+  document.querySelectorAll('.modal').forEach(function(modal) {
+    modal.classList.remove('show');//czyszczenie show z modali
+  })
+  document.getElementById('modal-one').classList.add('show');//uzupelnienie o show w wybranym modalu
+};
+
+// document.querySelectorAll('.show-modal').forEach(function(btn) {
+//   btn.addEventListener('click', function(e) {
+//     e.preventDefault();
+//     var href = btn.getAttribute('href');//pobranie atrybutu z linku
+//     console.log(href);
+//     openModal(href);//wywolanie funkcji dodajacej show na podstawie atrybutu ze zmiennej
+//   })
+// });
+
+var showModal = function(){
+  document.getElementById('modal-overlay').classList.add('show');
+  openModal();
+};
+
+var hideModal = function(){
+  document.querySelector('#modal-overlay').classList.remove('show');
+};
+
+
+window.onload=function(){
+
+  document.querySelector('#modal-overlay').addEventListener('click', hideModal);
+
+  var closeButtons = document.querySelectorAll('.modal .close');
+
+  for(var i = 0; i < closeButtons.length; i++){
+    closeButtons[i].addEventListener('click', hideModal);
+  }
+
+  var modals = document.querySelectorAll('.modal');
+    
+  for(var i = 0; i < modals.length; i++){
+    modals[i].addEventListener('click', function(event){
+      event.stopPropagation();
+    });
+  }
+}
+
+//--------------------------------WŁASCIWY KOD GRY
 
 var startNewGame = function(){ //rozpoczynanie nowej gry
   params.scoreComputer = 0; //zerowanie punktow komputera
@@ -31,6 +82,8 @@ var startNewGame = function(){ //rozpoczynanie nowej gry
 }
 
 var counter = function(num) { //dodawanie punktow
+  var score = document.getElementById('score');
+
   
   if (num == 1 && params.scorePlayer < params.roundsToWin && params.scoreComputer < params.roundsToWin) { //gracz wygral punkt
     params.scorePlayer += 1;
@@ -43,9 +96,11 @@ var counter = function(num) { //dodawanie punktow
   results.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer;
   
   if (params.scorePlayer >= params.roundsToWin) {
-    results.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br>YOU WON!';
+    showModal();
+    score.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br><b>YOU WON!</b>';
   } else if (params.scoreComputer >= params.roundsToWin){
-    results.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br>YOU LOST!';
+    showModal();
+    score.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br><b>YOU LOST!</b>';
   }
 }
 
@@ -97,7 +152,7 @@ var playerMove = function(num) { //ruch gracza
 
 newGame.addEventListener('click', startNewGame);
 
-//---------------------------------ETAP 2 ZADANIA
+//---------------------------------ETAP 2 ZADANIA - pętla dla wyborów gracza
 
 document.querySelectorAll('.player-move').forEach(function(btn){
   btn.addEventListener('click', function(e){
