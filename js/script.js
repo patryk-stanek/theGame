@@ -12,6 +12,8 @@ var params = {
   scorePlayer: '',
   scoreComputer: '',
   roundsToWin: '',
+  progress: [],
+
   roundsPlayed: '',
   endGame: ''
 }
@@ -95,10 +97,10 @@ var counter = function(num) { //dodawanie punktow
   
   results.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer;
   
-  if (params.scorePlayer >= params.roundsToWin) {
+  if (params.scorePlayer >= params.roundsToWin && params.scorePlayer != '') {
     showModal();
     score.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br><b>YOU WON!</b>';
-  } else if (params.scoreComputer >= params.roundsToWin){
+  } else if (params.scoreComputer >= params.roundsToWin && params.scorePlayer != ''){
     showModal();
     score.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br><b>YOU LOST!</b>';
   }
@@ -115,7 +117,9 @@ var playerMove = function(num) { //ruch gracza
   
   var optionPlayer = num; 
   var optionComp = compMove();
-  console.log(optionPlayer);
+  // console.log(optionPlayer);
+  // params.progress.push = optionPlayer;
+  // console.log(params.progress);
   
   if (optionPlayer == 1 && optionComp == 2) { //porownywanie wyborow gracza i komputera
     output.innerHTML = 'You WIN: You played PAPER and opponent played ROCK';
@@ -140,12 +144,12 @@ var playerMove = function(num) { //ruch gracza
     counter(2);
   };
   
-  if (params.roundsToWin == undefined) { //wymaganie od gracza ilosci rund
+  if (params.roundsToWin == '') { //wymaganie od gracza ilosci rund
     output.innerHTML = 'YOU NEED A NUMBER THERE!';
     results.innerHTML = '';
   }
   
-  if (params.scorePlayer >= params.roundsToWin || params.scoreComputer >= params.roundsToWin) {
+  if (params.roundsToWin != '' && params.scorePlayer >= params.roundsToWin || params.scoreComputer >= params.roundsToWin) {
     output.innerHTML = "GAME IS OVER! PLEASE PRESS NEW GAME BUTTON";
   }
 };
