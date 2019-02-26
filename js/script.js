@@ -12,9 +12,9 @@ var params = {
   scorePlayer: '',
   scoreComputer: '',
   roundsToWin: '',
-  progress: [],
+  progress: [[]],
 
-  roundsPlayed: '',
+  roundsPlayed: 1,
   endGame: ''
 }
 
@@ -27,15 +27,6 @@ function openModal() {
   })
   document.getElementById('modal-one').classList.add('show');//uzupelnienie o show w wybranym modalu
 };
-
-// document.querySelectorAll('.show-modal').forEach(function(btn) {
-//   btn.addEventListener('click', function(e) {
-//     e.preventDefault();
-//     var href = btn.getAttribute('href');//pobranie atrybutu z linku
-//     console.log(href);
-//     openModal(href);//wywolanie funkcji dodajacej show na podstawie atrybutu ze zmiennej
-//   })
-// });
 
 var showModal = function(){
   document.getElementById('modal-overlay').classList.add('show');
@@ -88,21 +79,28 @@ var counter = function(num) { //dodawanie punktow
 
   
   if (num == 1 && params.scorePlayer < params.roundsToWin && params.scoreComputer < params.roundsToWin) { //gracz wygral punkt
+    params.roundsPlayed += 1;
     params.scorePlayer += 1;
   } else if (num == 0 && params.scoreComputer < params.roundsToWin && params.scorePlayer < params.roundsToWin) { //gracz przegral punkt
     params.scoreComputer += 1;
+    params.roundsPlayed += 1;
   } else {
     results.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer; //remis
+    params.roundsPlayed += 1;
   }
   
   results.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer;
   
-  if (params.scorePlayer >= params.roundsToWin && params.scorePlayer != '') {
+  if (params.scorePlayer >= params.roundsToWin && params.scorePlayer != '' && params.endGame < 1) {
     showModal();
     score.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br><b>YOU WON!</b>';
-  } else if (params.scoreComputer >= params.roundsToWin && params.scorePlayer != ''){
+    params.endGame++;
+    console.log(params.endGame);
+  } else if (params.scoreComputer >= params.roundsToWin && params.scorePlayer != '' && params.endGame < 1){
     showModal();
     score.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br><b>YOU LOST!</b>';
+    params.endGame++;
+    console.log(params.endGame);
   }
 }
 
@@ -118,8 +116,14 @@ var playerMove = function(num) { //ruch gracza
   var optionPlayer = num; 
   var optionComp = compMove();
   // console.log(optionPlayer);
-  // params.progress.push = optionPlayer;
-  // console.log(params.progress);
+  params.progress.push([optionPlayer, optionComp, params.roundsPlayed]);
+  console.log(params.progress);
+
+
+
+  // for (var i=1;params.progress.length;i++) {
+
+  // };
   
   if (optionPlayer == 1 && optionComp == 2) { //porownywanie wyborow gracza i komputera
     output.innerHTML = 'You WIN: You played PAPER and opponent played ROCK';
@@ -147,12 +151,17 @@ var playerMove = function(num) { //ruch gracza
   if (params.roundsToWin == '') { //wymaganie od gracza ilosci rund
     output.innerHTML = 'YOU NEED A NUMBER THERE!';
     results.innerHTML = '';
-  }
-  
-  if (params.roundsToWin != '' && params.scorePlayer >= params.roundsToWin || params.scoreComputer >= params.roundsToWin) {
+  } else if (params.roundsToWin != '' && params.scorePlayer >= params.roundsToWin || params.scoreComputer >= params.roundsToWin) {
     output.innerHTML = "GAME IS OVER! PLEASE PRESS NEW GAME BUTTON";
-  }
+  };
 };
+
+function createTable(tableData) {
+  var table = document.createElement('table');
+  var tableBody = document.createElement('tbody');
+
+
+}
 
 newGame.addEventListener('click', startNewGame);
 
