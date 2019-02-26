@@ -46,7 +46,7 @@ button {
 .modal {
 	display: none;
 	background: #fff;
-	width: 200px;
+	// width: 200px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -78,4 +78,20 @@ button {
     padding: 5px 30px;
     text-align: center;
 	}
+}
+
+.score-table {
+  display: flex;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+}
+
+tr {
+  border: 1px solid red;
+}
+
+td {
+  border: 1px solid green;
+  padding: 5px;
 }

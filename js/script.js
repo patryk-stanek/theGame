@@ -12,9 +12,9 @@ var params = {
   scorePlayer: '',
   scoreComputer: '',
   roundsToWin: '',
-  progress: [[]],
+  progress: [],
 
-  roundsPlayed: 1,
+  roundsPlayed: 0,
   endGame: ''
 }
 
@@ -57,13 +57,61 @@ window.onload=function(){
   }
 }
 
+//-----------------------------------ETAP 5 - tworzenie tablic z wynikiem
+
+// function createTable(tableData) {
+//   var table = document.createElement('table');
+//   var tableBody = document.createElement('tbody');
+
+//   tableData.forEach(function(rowData) {
+//     var row = document.createElement('tr');
+
+//     rowData.forEach(function(cellData) {
+//       var cell = document.createElement('td');
+//       cell.appendChild(document.createTextNode(cellData));
+//       row.appendChild(cell);
+//     });
+
+//     tableBody.appendChild(row);
+//   });
+
+//   table.appendChild(tableBody);
+//   document.body.appendChild(table);
+// };
+
+function createTable(){
+  var body = document.getElementsByTagName('span')[0];
+  // var body = document.getElementById('table')[0];
+  var tab = document.createElement('table');
+  
+  var table = document.getElementsByTagName('table')[0];
+
+  for (var row=0; row<params.progress.length; row++){
+    var tr = document.createElement('tr');
+    for (var col=0; col<params.progress[row].length; col++) {
+      var td = document.createElement('td');
+      var tn = document.createTextNode(params.progress[row][col]);
+      td.appendChild(tn);
+      tr.appendChild(td);
+    };
+    tab.appendChild(tr);
+  };
+
+  table.parentNode.removeChild(table);//czyszczenie pierwszego wpisu w tablicy
+
+  body.appendChild(tab);
+};
+
 //--------------------------------WŁASCIWY KOD GRY
 
 var startNewGame = function(){ //rozpoczynanie nowej gry
   params.scoreComputer = 0; //zerowanie punktow komputera
   params.scorePlayer = 0; //zerowanie punktow gracza
+  params.roundsPlayed = 0; //zerowanie ilosci rund
   results.innerHTML = ""; //czyszczenie results
   output.innerHTML = ""; //czyszczenie output
+  params.progress.length = 0; //czyszczenie tablicy z wynikiem
+  params.endGame = 0;
   params.roundsToWin = window.prompt('HOW MANY ROUNDS TO WIN?');
   
   if (isNaN(params.roundsToWin) || params.roundsToWin == null || params.roundsToWin == ' ' || params.roundsToWin == '') {
@@ -116,14 +164,16 @@ var playerMove = function(num) { //ruch gracza
   var optionPlayer = num; 
   var optionComp = compMove();
   // console.log(optionPlayer);
-  params.progress.push([optionPlayer, optionComp, params.roundsPlayed]);
-  console.log(params.progress);
-
-
-
-  // for (var i=1;params.progress.length;i++) {
-
-  // };
+  
+  if (params.roundsToWin == '') { //wymaganie od gracza ilosci rund
+    output.innerHTML = 'YOU NEED A NUMBER THERE!';
+    results.innerHTML = '';
+    return;
+  } else if (params.roundsToWin != '' && params.scorePlayer >= params.roundsToWin || params.scoreComputer >= params.roundsToWin) {
+    output.innerHTML = "GAME IS OVER! PLEASE PRESS NEW GAME BUTTON";
+    return;
+  };
+  
   
   if (optionPlayer == 1 && optionComp == 2) { //porownywanie wyborow gracza i komputera
     output.innerHTML = 'You WIN: You played PAPER and opponent played ROCK';
@@ -147,21 +197,13 @@ var playerMove = function(num) { //ruch gracza
     output.innerHTML = 'It\'s a DRAW!';
     counter(2);
   };
-  
-  if (params.roundsToWin == '') { //wymaganie od gracza ilosci rund
-    output.innerHTML = 'YOU NEED A NUMBER THERE!';
-    results.innerHTML = '';
-  } else if (params.roundsToWin != '' && params.scorePlayer >= params.roundsToWin || params.scoreComputer >= params.roundsToWin) {
-    output.innerHTML = "GAME IS OVER! PLEASE PRESS NEW GAME BUTTON";
+
+  if (params.roundsToWin != '') {
+    params.progress.push(['runda', params.roundsPlayed, 'twój wynik', params.scorePlayer, 'wynik przeciwnika', params.scoreComputer, 'twój ruch', optionPlayer, 'ruch przeciwnika', optionComp]);
+    console.log(params.progress);
+    createTable(params.progress);
   };
 };
-
-function createTable(tableData) {
-  var table = document.createElement('table');
-  var tableBody = document.createElement('tbody');
-
-
-}
 
 newGame.addEventListener('click', startNewGame);
 
