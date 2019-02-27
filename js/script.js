@@ -124,27 +124,24 @@ var counter = function(num) { //dodawanie punktow
     showModal();
     score.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br><b>YOU WON!</b>';
     params.endGame++;
-    console.log(params.endGame);
   } else if (params.scoreComputer >= params.roundsToWin && params.scorePlayer != '' && params.endGame < 1){
     showModal();
     score.innerHTML = params.scorePlayer + ' - ' + params.scoreComputer + '<br><b>YOU LOST!</b>';
     params.endGame++;
-    console.log(params.endGame);
   }
 }
 
 var compMove = function() { //losowanie ruchow przeciwnika
   
-  var compOption;
-  compOption = Math.round(Math.random() * 2 + 1);
-  return compOption;
+  var options = ['paper', 'rock', 'scissors'];
+  var move = options[Math.floor(Math.random()*options.length)];
+  return move;
 }
 
 var playerMove = function(num) { //ruch gracza
   
   var optionPlayer = num; 
   var optionComp = compMove();
-  // console.log(optionPlayer);
   
   if (params.roundsToWin == '') { //wymaganie od gracza ilosci rund
     output.innerHTML = 'YOU NEED A NUMBER THERE!';
@@ -155,33 +152,25 @@ var playerMove = function(num) { //ruch gracza
     return;
   };
   
-  
-  if (optionPlayer == 1 && optionComp == 2) { //porownywanie wyborow gracza i komputera
-    output.innerHTML = 'You WIN: You played PAPER and opponent played ROCK';
+  if (optionPlayer == 'paper' && optionComp == 'rock') { //porownywanie wyborow gracza i komputera
+    output.innerHTML = 'You WIN: You played ' + optionPlayer.toUpperCase() + ' and opponent played ' + optionComp.toUpperCase();
     counter(1);
-  } else if (optionPlayer == 1 && optionComp == 3) {
-    output.innerHTML = 'You LOST: You played PAPER and opponent played SCISSORS';
-    counter(0);
-  } else if (optionPlayer == 3 && optionComp == 1) {
-    output.innerHTML = 'You WIN: You played SCISSORS and opponent played PAPER';
+  } else if (optionPlayer == 'scissors' && optionComp == 'paper') {
+    output.innerHTML = 'You WIN: You played ' + optionPlayer.toUpperCase() + ' and opponent played ' + optionComp.toUpperCase();
     counter(1);
-  } else if (optionPlayer == 3 && optionComp == 2) {
-    output.innerHTML = 'You LOST: You played SCISSORS and opponent played ROCK';
-    counter(0);
-  } else if (optionPlayer == 2 && optionComp == 3) {
-    output.innerHTML = 'You WIN: You played ROCK and opponent played SCISSORS';
+  } else if (optionPlayer == 'rock' && optionComp == 'scissors') {
+    output.innerHTML = 'You WIN: You played ' + optionPlayer.toUpperCase() + ' and opponent played ' + optionComp.toUpperCase();
     counter(1);
-  } else if (optionPlayer == 2 && optionComp == 1) {
-    output.innerHTML = 'You LOST: You played ROCK and opponent played PAPER';
-    counter(0);
-  } else {
+  } else if (optionPlayer === optionComp) {
     output.innerHTML = 'It\'s a DRAW!';
     counter(2);
+  } else {
+    output.innerHTML = 'You LOST: You played ' + optionPlayer.toUpperCase() + ' and opponent played ' + optionComp.toUpperCase();
+    counter(0);
   };
 
   if (params.roundsToWin != '') {
     params.progress.push(['runda', params.roundsPlayed, 'twój wynik', params.scorePlayer, 'wynik przeciwnika', params.scoreComputer, 'twój ruch', optionPlayer, 'ruch przeciwnika', optionComp]);
-    console.log(params.progress);
     createTable(params.progress);
   };
 };
@@ -193,18 +182,6 @@ newGame.addEventListener('click', startNewGame);
 document.querySelectorAll('.player-move').forEach(function(btn){
   btn.addEventListener('click', function(e){
     e.preventDefault();
-    var x = btn.dataset.move; //pobieranie nazwy ruchu gracza
-
-    var y; //zmienna potrzebna by przypisac ruch gracza do numeru
-
-    if (x == 'paper') {
-      y = 1;
-    } else if (x == 'stone') {
-      y = 2;
-    } else {
-      y = 3;
-    }
-
-    playerMove(y);
+    playerMove(btn.dataset.move);
   });
 });
